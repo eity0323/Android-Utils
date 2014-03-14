@@ -1,5 +1,6 @@
 package com.rosshambrick.android.utils.masterdetail;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 
 public abstract class DetailFragment<T> extends Fragment {
@@ -9,8 +10,16 @@ public abstract class DetailFragment<T> extends Fragment {
 
     private DetailFragment.Listener<T> mListener;
 
-    public void setListener(Listener<T> listener) {
-        mListener = listener;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mListener = (Listener<T>) activity;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     protected void onItemUpdated(T item) {
