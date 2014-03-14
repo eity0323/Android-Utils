@@ -66,7 +66,10 @@ public abstract class MasterDetailFragmentActivity<T> extends FragmentActivity
         if (mMultiSelectItemsMap == null) {
             mMultiSelectItemsMap = new HashMap<T, Fragment>();
         }
-        updateDetailFragments();
+
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        updateDetailFragments(ft);
+        ft.commit();
 
     }
 
@@ -96,23 +99,29 @@ public abstract class MasterDetailFragmentActivity<T> extends FragmentActivity
     @Override
     public void onMultiItemSelected(T item) {
         if (item != null) {
-            removeAllMultiselectFragments();
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            removeAllMultiselectFragments(ft);
             mMultiSelectItemsMap.put(item, null);
-            updateDetailFragments();
+            updateDetailFragments(ft);
+            ft.commit();
         }
     }
 
     @Override
     public void onMultiItemUnselected(T item) {
-        removeAllMultiselectFragments();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        removeAllMultiselectFragments(ft);
         mMultiSelectItemsMap.remove(item);
-        updateDetailFragments();
+        updateDetailFragments(ft);
+        ft.commit();
     }
 
     @Override
     public void onClearSelections() {
-        removeAllMultiselectFragments();
+        FragmentTransaction ft = mFragmentManager.beginTransaction();
+        removeAllMultiselectFragments(ft);
         mMultiSelectItemsMap.clear();
+        ft.commit();
     }
 
     private void removeSingleDetailFragment(FragmentTransaction ft) {
@@ -132,7 +141,7 @@ public abstract class MasterDetailFragmentActivity<T> extends FragmentActivity
         }
     }
 
-    private void updateDetailFragments() {
+    private void updateDetailFragments(FragmentTransaction ft) {
         int i = 0;
         for (T item : mMultiSelectItemsMap.keySet()) {
             int id = i + 1;
@@ -154,27 +163,25 @@ public abstract class MasterDetailFragmentActivity<T> extends FragmentActivity
             container.addView(multiSelectContainer, params);
 
             DetailFragment<T> detailFragment = getDetailFragment(item);
-            mFragmentManager.beginTransaction()
-                    .add(id, detailFragment)
-                    .commit();
+
+            ft.add(id, detailFragment);
+
             mMultiSelectItemsMap.put(item, detailFragment);
 
             i++;
         }
     }
 
-    private void removeAllMultiselectFragments() {
+    private void removeAllMultiselectFragments(FragmentTransaction ft) {
         for (T item : mMultiSelectItemsMap.keySet()) {
-            removeDetailFragment(item);
+            removeDetailFragment(item, ft);
         }
     }
 
-    private void removeDetailFragment(T item) {
+    private void removeDetailFragment(T item, FragmentTransaction ft) {
         Fragment fragment = mMultiSelectItemsMap.get(item);
         if (fragment != null) {
-            mFragmentManager.beginTransaction()
-                    .remove(fragment)
-                    .commit();
+            ft.remove(fragment);
             for (int i = 0; i < mFragmentDetailContainer.getChildCount(); i++) {
                 View child = mFragmentDetailContainer.getChildAt(i);
                 if (child.getId() == fragment.getId()) {
