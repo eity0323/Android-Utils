@@ -1,4 +1,4 @@
-package com.rosshambrick.android.utils.masterdetail;
+package com.rosshambrick.android.controllers.masterdetail;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

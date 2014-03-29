@@ -1,4 +1,4 @@
-package com.rosshambrick.android.utils.masterdetail;
+package com.rosshambrick.android.controllers.masterdetail;
 
 import android.app.Activity;
 import android.support.v4.app.ListFragment;
