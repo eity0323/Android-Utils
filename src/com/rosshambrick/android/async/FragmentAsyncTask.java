@@ -2,10 +2,12 @@ package com.rosshambrick.android.async;
 
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import com.rosshambrick.android.utils.L;
+import android.util.Log;
 
 public abstract class FragmentAsyncTask<TParams, TProgress, TResult>
         extends BetterAsyncTask<TParams, TProgress, TResult> {
+
+    private static final String TAG = "FragmentAsyncTask";
 
     public static final int DELAY_MILLIS = 250;
     public static final int NUM_RETRIES = 5;
@@ -60,7 +62,7 @@ public abstract class FragmentAsyncTask<TParams, TProgress, TResult>
                     mListener.onTaskProgress(values);
                 } else if (mProgressRetries < NUM_RETRIES) {
                     mProgressRetries++;
-                    L.i(this, "Fragment not visible - delaying onProgressUpdate()");
+                    Log.i(TAG, "Fragment not visible - delaying onProgressUpdate()");
                     new Handler().postDelayed(this, DELAY_MILLIS);
                 }
             }
@@ -78,7 +80,7 @@ public abstract class FragmentAsyncTask<TParams, TProgress, TResult>
                 } else if (mSuccessRetries < NUM_RETRIES) {
                     mRetryingOnSuccess = true;
                     mSuccessRetries++;
-                    L.i(this, "Fragment not visible - delaying onSuccess()");
+                    Log.i(TAG, "Fragment not visible - delaying onSuccess()");
                     new Handler().postDelayed(this, DELAY_MILLIS);
                 }
             }
@@ -96,7 +98,7 @@ public abstract class FragmentAsyncTask<TParams, TProgress, TResult>
                 } else if (mErrorRetries < NUM_RETRIES) {
                     mRetryingOnError = true;
                     mErrorRetries++;
-                    L.i(this, "Fragment not visible - delaying onError()");
+                    Log.i(TAG, "Fragment not visible - delaying onError()");
                     new Handler().postDelayed(this, DELAY_MILLIS);
                 }
             }
@@ -113,7 +115,7 @@ public abstract class FragmentAsyncTask<TParams, TProgress, TResult>
                     resetRetainedState();
                 } else if (mFinishedRetries < NUM_RETRIES) {
                     mFinishedRetries++;
-                    L.i(this, "Fragment not visible - delaying onFinished()");
+                    Log.i(TAG, "Fragment not visible - delaying onFinished()");
                     new Handler().postDelayed(this, DELAY_MILLIS);
                 } else {
                     resetRetainedState();
